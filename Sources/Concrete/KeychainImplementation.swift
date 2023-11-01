@@ -101,6 +101,18 @@ public final class KeychainImplementation: Keychain {
     }
   }
   
+  public func isKeyExist(_ record: KeychainRecord) -> Bool {
+    let query: KeychainQuery<SecKey> = KeychainQueryFactory.load(record, accessGroup: self.accessGroup, context: nil)
+    do {
+      let res = try query.execute().get()
+      return true
+    } catch KeychainQueryError.notFound {
+      return false
+    } catch {
+      return true
+    }
+  }
+  
   public func generate(keys: KeychainKeypair, context: LAContext) throws -> KeychainKeypair {
     do {
       try self.validateNotFound(record: keys.prv, context: context)

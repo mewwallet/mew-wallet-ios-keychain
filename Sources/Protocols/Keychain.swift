@@ -17,6 +17,7 @@ public protocol Keychain {
   func update(_ record: KeychainRecord) throws
   func load(_ record: KeychainRecord, context: LAContext?) throws -> KeychainRecord
   func delete(_ record: KeychainRecord) throws
+  func isKeyExist(_ record: KeychainRecord) -> Bool
   
   // MARK: - Secure Enclave
   func generate(keys: KeychainKeypair, context: LAContext) throws -> KeychainKeypair
