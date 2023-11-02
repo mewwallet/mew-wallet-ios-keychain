@@ -506,4 +506,43 @@ class testAppTests: XCTestCase {
       XCTFail(error.localizedDescription)
     }
   }
+  
+  func testIsKeyExist() {
+    // Generate key
+    let credential = Data([0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    let laContext = LAContext()
+    laContext.setCredential(credential, type: .applicationPassword)
+    do {
+      let keys = try testAppTests.keychain.generate(keys: KeychainKeypair(prv: .key, pub: .pub, secureEnclave: true), context: laContext)
+      XCTAssertNotNil(keys.prv)
+      XCTAssertNotNil(keys.pub)
+    
+      XCTAssertTrue(testAppTests.keychain.isKeyExist(.key(key: nil, label: .key)))
+      XCTAssertTrue(testAppTests.keychain.isKeyExist(.key(key: nil, label: .pub)))
+      
+      try testAppTests.keychain.delete(.key(key: nil, label: .key))
+      
+      XCTAssertFalse(testAppTests.keychain.isKeyExist(.key(key: nil, label: .key)))
+      XCTAssertTrue(testAppTests.keychain.isKeyExist(.key(key: nil, label: .pub)))
+      
+      try testAppTests.keychain.delete(.key(key: nil, label: .pub))
+      
+      XCTAssertFalse(testAppTests.keychain.isKeyExist(.key(key: nil, label: .key)))
+      XCTAssertFalse(testAppTests.keychain.isKeyExist(.key(key: nil, label: .pub)))
+      
+      let text = "This is test message"
+      let data = text.data(using: .utf8)!
+      try testAppTests.keychain.delete(.data(data: nil, label: .message, account: nil))
+      defer {
+        try? testAppTests.keychain.delete(.data(data: nil, label: .message, account: nil))
+      }
+      
+      XCTAssertNoThrow(try testAppTests.keychain.save(.data(data: data, label: .message, account: nil)))
+      XCTAssertTrue(testAppTests.keychain.isKeyExist(.data(data: nil, label: .message, account: nil)))
+      try? testAppTests.keychain.delete(.data(data: nil, label: .message, account: nil))
+      XCTAssertFalse(testAppTests.keychain.isKeyExist(.data(data: nil, label: .message, account: nil)))
+    } catch {
+      XCTFail(error.localizedDescription)
+    }
+  }
 }
