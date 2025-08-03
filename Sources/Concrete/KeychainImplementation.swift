@@ -55,8 +55,6 @@ public final class KeychainImplementation: Keychain {
         throw KeychainError.general(message: "Couldn't update record. OSStatus: \(status). Record: \(record)")
       } catch KeychainQueryError.notFound {
         throw KeychainError.notFound(message: "Couldn't get data for record: \(record)")
-      } catch {
-        throw error
       }
     }
   }
@@ -94,10 +92,8 @@ public final class KeychainImplementation: Keychain {
       try query.execute().get()
     } catch KeychainQueryError.invalidRecord {
       throw KeychainError.general(message: "Couldn't delete key. It's possible that the access control you have provided isn't supported on this OS and/or hardware.")
-    } catch let error as KeychainQueryError {
+    } catch let error/* as KeychainQueryError*/ {
       throw KeychainError.general(message: "Couldn't delete key. OSStatus: \(error.status)")
-    } catch {
-      throw KeychainError.general(message: "Couldn't delete key")
     }
   }
   
