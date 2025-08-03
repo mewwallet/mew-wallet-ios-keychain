@@ -270,7 +270,7 @@ final class KeychainQuery<R> {
     /* ========= public ========= */
     var pubQuery: [String: Any] = [
       kSecClass               as String: kSecClassKey,
-      kSecAttrAccessible      as String: kSecAttrAccessibleAlwaysThisDeviceOnly,
+      kSecAttrAccessible      as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
       kSecAttrSynchronizable  as String: false
     ]
     if let label = pubLabel {

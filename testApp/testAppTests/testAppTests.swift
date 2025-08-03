@@ -517,18 +517,18 @@ class testAppTests: XCTestCase {
       XCTAssertNotNil(keys.prv)
       XCTAssertNotNil(keys.pub)
     
-      XCTAssertTrue(testAppTests.keychain.isKeyExist(.key(key: nil, label: .key)))
-      XCTAssertTrue(testAppTests.keychain.isKeyExist(.key(key: nil, label: .pub)))
+      XCTAssertTrue(testAppTests.keychain.isExist(.key(key: nil, label: .key)))
+      XCTAssertTrue(testAppTests.keychain.isExist(.key(key: nil, label: .pub)))
       
       try testAppTests.keychain.delete(.key(key: nil, label: .key))
       
-      XCTAssertFalse(testAppTests.keychain.isKeyExist(.key(key: nil, label: .key)))
-      XCTAssertTrue(testAppTests.keychain.isKeyExist(.key(key: nil, label: .pub)))
+      XCTAssertFalse(testAppTests.keychain.isExist(.key(key: nil, label: .key)))
+      XCTAssertTrue(testAppTests.keychain.isExist(.key(key: nil, label: .pub)))
       
       try testAppTests.keychain.delete(.key(key: nil, label: .pub))
       
-      XCTAssertFalse(testAppTests.keychain.isKeyExist(.key(key: nil, label: .key)))
-      XCTAssertFalse(testAppTests.keychain.isKeyExist(.key(key: nil, label: .pub)))
+      XCTAssertFalse(testAppTests.keychain.isExist(.key(key: nil, label: .key)))
+      XCTAssertFalse(testAppTests.keychain.isExist(.key(key: nil, label: .pub)))
       
       let text = "This is test message"
       let data = text.data(using: .utf8)!
@@ -538,9 +538,9 @@ class testAppTests: XCTestCase {
       }
       
       XCTAssertNoThrow(try testAppTests.keychain.save(.data(data: data, label: .message, account: nil)))
-      XCTAssertTrue(testAppTests.keychain.isKeyExist(.data(data: nil, label: .message, account: nil)))
+      XCTAssertTrue(testAppTests.keychain.isExist(.data(data: nil, label: .message, account: nil)))
       try? testAppTests.keychain.delete(.data(data: nil, label: .message, account: nil))
-      XCTAssertFalse(testAppTests.keychain.isKeyExist(.data(data: nil, label: .message, account: nil)))
+      XCTAssertFalse(testAppTests.keychain.isExist(.data(data: nil, label: .message, account: nil)))
     } catch {
       XCTFail(error.localizedDescription)
     }
